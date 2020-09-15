@@ -2,6 +2,7 @@ import os
 
 import google_auth_oauthlib
 import googleapiclient
+import youtube_dl 
 
 class Song(object):
     def __init__(self, artist, track):
@@ -55,8 +56,18 @@ def get_videos_from_playlists(self, playlist_id):
         artist, track = self.get_artist_and_track_from_video(video_id)
         if artist and track:
             songs.append(Song(artist, track)) 
-            
+
     return songs
     
 def get_artist_and_track_from_video(self, video_id):
-    pass
+    youtube_url = f"https://www.youtube.com/watch?v={video_id}" 
+
+    video = youtube_dl.YoutubeDL({'quiet': True }).extract_info(
+        youtube_url, download = False 
+
+    ) 
+
+    artist = video['artist']
+    track = video['track']
+
+    return artist, track 
