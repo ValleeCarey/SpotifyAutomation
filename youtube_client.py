@@ -3,6 +3,11 @@ import os
 import google_auth_oauthlib
 import googleapiclient
 
+class Song(object):
+    def __init__(self, artist, track):
+        self.artist = artist 
+        self.track = track
+
 class YoutubeClient(object):
     def __init__(self, credentials_location):
         scopes = ["https://www.googleapis.com/auth/youtube.readonly"]
@@ -38,7 +43,20 @@ def get_playlists(self):
     return playlists
     
 def get_videos_from_playlists(self, playlist_id):
-    pass
+    songs = []
+    request = self.youtube_client.playlistItems().list(
+        playlistId = playlist_id,
+        part = "id, snippet"
+    )
+    response = request.execute()
+
+    for item in response['items']:
+        video_id = item["snippet"]["resourceId"]["videoId"]
+        artist, track = self.get_artist_and_track_from_video(video_id)
+        if artist and track:
+            songs.append(Song(artist, track)) 
+            
+    return songs
     
 def get_artist_and_track_from_video(self, video_id):
     pass
