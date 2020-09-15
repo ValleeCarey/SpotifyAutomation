@@ -4,6 +4,12 @@ import google_auth_oauthlib
 import googleapiclient
 import youtube_dl 
 
+class Playlist(object):
+    def __init__(self, id, title):
+        self.id = id 
+        self.title = title 
+
+
 class Song(object):
     def __init__(self, artist, track):
         self.artist = artist 
@@ -39,7 +45,7 @@ def get_playlists(self):
     )
     response = request.execute()
 
-    playlists = [playlist for playlist in response["items"]]
+    playlists = [Playlist(item['id'], item['snippet']['title']) for item in response["items"]]
 
     return playlists
     
